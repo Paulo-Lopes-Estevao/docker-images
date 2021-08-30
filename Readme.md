@@ -29,7 +29,7 @@ COPY --from=builder /go/src/app/execute ./execute
 CMD [ "./execute" ]
 
 ```
-<br>
+
 <br>
 <br>
 <br>
@@ -79,4 +79,36 @@ EXPOSE 3000
 
 CMD ["yarn", "start"]
 
+```
+
+<br>
+<br>
+<br>
+<br>
+
+## React
+
+``` # React
+FROM node:12.18-alpine AS build
+
+ENV HOME=/usr/srs/app
+WORKDIR $HOME
+
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+RUN npm install --production --silent
+RUN npm install react-scripts@^3.4.1 -g --silent
+
+COPY . .
+
+RUN  npm run build
+
+FROM nginx:1.16.0-alpine
+
+COPY --from=build /usr/srs/app/build /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx/nginx.conf /etc/nginx/conf.d
+
+EXPOSE 80
+
+CMD ["nginx","-g", "daemon off;"]
 ```
