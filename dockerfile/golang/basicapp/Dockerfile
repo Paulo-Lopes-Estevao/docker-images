@@ -8,10 +8,7 @@ ENV GO111MODULE=on
 ENV CGO_ENABLED=0
 ENV GOARCH=amd64
 
-
 COPY . /go/src/app/
-
-RUN go mod init
 
 RUN go build -o execute
 
