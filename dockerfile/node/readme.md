@@ -57,7 +57,7 @@ CMD ["npm" "start"]
 [# N3](https://github.com)
 
 ``` dockerfile
-
+FROM node
 RUN apk add dumb-init
 ENV NODE_ENV production
 
@@ -66,6 +66,24 @@ COPY --chown=node:node . .
 RUN npm ci --only=production
 
 USER node
+CMD ["dumb-init", "node", "server.js"]
+
+```
+
+<br>
+<br>
+
+[# N4](https://github.com)
+
+``` dockerfile
+
+FROM node
+RUN apk add dumb-init
+ENV NODE_ENV production
+USER node
+WORKDIR /usr/src/app
+COPY --chown=node:node --from=build /usr/src/app/node_modules /usr/src/app/node_modules
+COPY --chown=node:node . /usr/src/app
 CMD ["dumb-init", "node", "server.js"]
 
 ```
